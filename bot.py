@@ -1,19 +1,29 @@
 import os
+
+print("🚀 INICIO BOT")
+
+TOKEN = os.environ.get("TOKEN")
+
+print("TOKEN RAW:", TOKEN)
+
+if not TOKEN:
+    print("❌ ERROR: TOKEN NO ENCONTRADO")
+    raise SystemExit("SIN TOKEN")
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 
-TOKEN = os.environ["TOKEN"]
+print("📦 librerías cargadas")
 
 async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    texto = update.message.text.lower()
-
-    if "hola" in texto:
-        await update.message.reply_text("Hola 👋 bot de la agenda de Tetuán activo")
-    else:
-        await update.message.reply_text("Recibido 🙂")
+    await update.message.reply_text("OK 👋")
 
 app = ApplicationBuilder().token(TOKEN).build()
 
+print("🤖 BOT CONSTRUIDO")
+
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder))
+
+print("▶️ RUNNING")
 
 app.run_polling()

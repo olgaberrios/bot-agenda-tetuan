@@ -1,21 +1,19 @@
 import os
 from telegram import Update
-from telegram.ext import Updater, MessageHandler, Filters, CallbackContext
+from telegram.ext import ApplicationBuilder, MessageHandler, ContextTypes, filters
 
 TOKEN = os.environ["TOKEN"]
 
-def responder(update: Update, context: CallbackContext):
+async def responder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = update.message.text.lower()
 
     if "hola" in texto:
-        update.message.reply_text("Hola 👋 bot de la agenda de Tetuán activo")
+        await update.message.reply_text("Hola 👋 bot de la agenda de Tetuán activo")
     else:
-        update.message.reply_text("Recibido 🙂")
+        await update.message.reply_text("Recibido 🙂")
 
-updater = Updater(TOKEN, use_context=True)
+app = ApplicationBuilder().token(TOKEN).build()
 
-dp = updater.dispatcher
-dp.add_handler(MessageHandler(Filters.text & ~Filters.command, responder))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder))
 
-updater.start_polling()
-updater.idle()
+app.run_polling()
